@@ -1,0 +1,279 @@
+*{
+  box-sizing: border-box;
+}
+
+:root{
+  --bg: #0f172a;
+  --card-radius: 12px;
+}
+
+body{
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, #071129 0%, #0f172a 100%);
+  color: #ffffff;
+  padding: 2rem;
+}
+
+/* grid container for cards */
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 3rem 1.5rem; /* larger row-gap so shadows/footers don't touch the next row */
+  width: 100%;
+  max-width: 1200px;
+  margin: 1.5rem auto; /* center the grid */
+  align-items: stretch; /* ensure all grid items are same height */
+  grid-auto-rows: 1fr; /* make each row distribute height evenly */
+}
+
+.app-container main{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* navbar */
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(6px);
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.navbar-inner{
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand{
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.cart-btn{
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cart-count{
+  background: #ff0055;
+  color: #fff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* modal styles */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+.modal{
+  width: 100%;
+  max-width: 820px;
+  /* make modal background opaque and more solid for clarity */
+  background: #071129; /* solid dark background */
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.85);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-body{ margin-top: 0.75rem; max-height: 60vh; overflow: auto; }
+.cart-list{ list-style: none; padding: 0; margin: 0; display: grid; gap: 0.75rem; }
+.cart-item{
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.6rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  align-items: stretch;
+}
+.cart-item img{
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.cart-item-info{
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 auto;
+  min-width: 0; /* allow text truncation */
+}
+.ci-title{ font-weight: 700; font-size: 0.95rem; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ci-meta{ display:flex; align-items:center; gap:0.5rem; margin-top: auto; }
+.ci-price{ font-weight: 800; color: #ffd; background: rgba(0,0,0,0.12); padding: 0.2rem 0.45rem; border-radius:6px; }
+.remove-icon{
+  background: transparent;
+  border: none;
+  color: #ffb3c7;
+  font-weight: 800;
+  font-size: 1.1rem;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.remove-icon:hover{ background: rgba(255,255,255,0.03); color: #fff; }
+.close-btn{ background: transparent; color: #fff; border: none; cursor: pointer; font-size: 1rem; }
+
+.modal-total{ font-weight: 700; margin-left: 0.5rem; color: #ffd; }
+.modal-footer{ display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.75rem; }
+.pay-row{ display:flex; align-items:center; gap:0.5rem; }
+.pay-label{ color: rgba(255,255,255,0.85); font-weight:600; }
+.pay-amount{ font-weight:900; color:#ffd; }
+.modal-actions{ display:flex; gap:0.5rem; align-items:center; }
+.pay-btn{ background: #00c853; color: #031219; border: none; padding: 0.5rem 0.85rem; border-radius: 8px; cursor: pointer; font-weight: 800; }
+.pay-btn:disabled{ opacity: 0.5; cursor: not-allowed; }
+
+/* vibrant animated gradient card */
+.card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  padding-bottom: 1.6rem; /* extra bottom padding so content doesn't visually touch next row */
+  border-radius: var(--card-radius);
+  color: #fff;
+  overflow: hidden;
+  min-height: 360px;
+  height: 100%; /* fill the grid cell so all cards match height */
+  box-shadow: 0 12px 30px rgba(2,6,23,0.6);
+  background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 25%, #ffb199 50%, #ffe29f 75%, #c1e1ff 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+}
+
+.card::after{
+  /* subtle dark overlay for legibility */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.2));
+  pointer-events: none;
+}
+
+.card:hover{
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 18px 40px rgba(2,6,23,0.7);
+}
+
+.badge{ display:none; }
+
+.card-title{
+  font-size: 1.05rem;
+  line-height: 1.25;
+  margin: 0;
+  margin-bottom: 0.75rem;
+  font-weight: 800;
+  z-index: 2;
+  min-height: 2.6em; /* ensure consistent height for titles */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* gradient text for more visual interest */
+  background: linear-gradient(90deg, #ffffff, #fff1a8, #ffd7a8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 18px rgba(2,6,23,0.35);
+}
+
+.card-image{
+  width: 100%;
+  height: 180px; /* increased height for better visibility */
+  object-fit: contain;
+  margin: 0;
+  background: rgba(255,255,255,0.08);
+  padding: 0.75rem;
+  border-radius: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-desc{
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(255,245,225,0.92); /* warm off-white */
+  margin: 0.75rem 0;
+  flex: 1 1 auto;
+  /* clamp description to 3 lines so cards remain visually the same height */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.card-footer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto; /* push footer to bottom */
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.card-price{
+  font-weight: 900;
+  color: #111827;
+  background: linear-gradient(90deg,#fff8a6,#ffd36b);
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px;
+}
+
+.buttons button{
+  background: linear-gradient(90deg,#ffffff,#ffe8b3);
+  color: #111827;
+  border: none;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 8px 26px rgba(2,6,23,0.28);
+}
+
+.buttons button:hover{
+  transform: translateY(-2px);
+  opacity: 0.98;
+}
+
+@keyframes gradientShift{
+  0%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+  100%{ background-position: 0% 50%; }
+}
+
+@media (max-width: 420px){
+  .card-image{ height: 120px; }
+  .grid{ gap: 0.75rem; padding: 0 0.5rem; }
+}
